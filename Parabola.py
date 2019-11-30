@@ -17,7 +17,7 @@ class Parabola(Scene):
         func = lambda y: y ** 2 / (4 * f)
 
         def parameterized_function(alpha):
-            y = interpolate(self.y_min, self.y_max, alpha)
+            y = interpolate(self.y_max, self.y_min, alpha)
             x = func(y)
             return self.coords_to_point(x, y)
         
