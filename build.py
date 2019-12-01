@@ -36,20 +36,24 @@ for i, f in zip(range(fileNum), files):
 select = input('Build File: ')
 
 targetFile = files[int(select)]
-classes = []
-with open(targetFile, 'r', encoding='utf8') as f:
-    for ln in f.readlines():
-        if ln.lstrip().startswith('class'):
-            words = re.split('\s|\(', ln)
-            if len(words) > 1:
-                classes.append(words[1])
+# classes = []
+# with open(targetFile, 'r', encoding='utf8') as f:
+#     for ln in f.readlines():
+#         if ln.lstrip().startswith('class'):
+#             words = re.split('\s|\(', ln)
+#             if len(words) > 1:
+#                 classes.append(words[1])
 
-classNum = len(classes)
-print("Please select build scene:")
-for i, c in zip(range(classNum), classes):
-    print('%d:\t%s' % (i, c))
-select = input('Build Class: ')
-targetClass = classes[int(select)]
+# classNum = len(classes)
+# print("Please select build scene:")
+# for i, c in zip(range(classNum), classes):
+#     print('%d:\t%s' % (i, c))
+# select = input('Build Class (All): ')
+# if select == '':
+#     targetClass = '-a'
+# else:
+#     targetClass = classes[int(select)]
+targetClass = ''
 
 cmd = 'python -m manim %s %s %s --media_dir %s' %\
     (str(targetFile), targetClass,\
