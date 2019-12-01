@@ -14,9 +14,19 @@ projectPath = Path.joinpath(
 
 mediaPath = Path.joinpath(projectPath, 'media')
 
-files = [f for f in projectPath.iterdir()\
-    if f.name not in ['build.py', 'setup.py']\
-        and f.suffix == ".py"]
+files = []
+extraFiles = ['build.py', 'setup.py', 'media']
+
+def iterdir(targetDir):
+    for f in targetDir.iterdir():
+        if f.name in extraFiles:
+            pass
+        elif f.is_dir():
+            iterdir(f)
+        elif f.suffix == ".py":
+                files.append(f)
+
+iterdir(projectPath)
 
 fileNum = len(files)
 print("Please select your file:")
