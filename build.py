@@ -28,14 +28,13 @@ def iterdir(targetDir):
 
 iterdir(projectPath)
 
-fileNum = len(files)
 print("Please select your file:")
-for i, f in zip(range(fileNum), files):
+for i, f in enumerate(files, 1):
     print('%d:\t%s' % (i, f.name))
 
 select = input('Build File: ')
 
-targetFile = files[int(select)]
+targetFile = files[int(select) - 1]
 # classes = []
 # with open(targetFile, 'r', encoding='utf8') as f:
 #     for ln in f.readlines():
