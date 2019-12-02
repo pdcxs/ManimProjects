@@ -1,27 +1,27 @@
 from manimlib.imports import *
-from ManimProjects.Parabola.Parabola import Parabola
+from ManimProjects.utils.Parabola import Parabola
+from ManimProjects.utils.geometry import CText
 
 class OpenScene(Scene):
     def construct(self):
-        text1head = Text('高中时期的解析几何都用', font='Microsoft YaHei')
-        text1body = Text('坐标系', font='Microsoft YaHei')
-        text1tail = Text('进行研究', font='Microsoft YaHei')
+        text1head = CText('高中时期的解析几何都用')
+        text1body = CText('坐标系')
+        text1tail = CText('进行研究')
         text1 = VGroup(text1head, text1body, text1tail, buff=SMALL_BUFF)
         text1.arrange()
         text1body.set_fill(DARK_BLUE)
 
-        text2 = Text('计算繁杂，且不优雅', font='Microsoft YaHei')
+        text2 = CText('计算繁杂，且不优雅')
         
-        text3head = Text('那么，是否可以用', font='Microsoft YaHei')
-        text3body = Text('纯几何', font='Microsoft YaHei')
-        text3tail = Text('的方法', font='Microsoft YaHei')
+        text3head = CText('那么，是否可以用')
+        text3body = CText('纯几何')
+        text3tail = CText('的方法')
         text3 = VGroup(text3head, text3body, text3tail, buff=SMALL_BUFF)
         text3body.set_fill(DARK_BLUE)
         text3.arrange()
 
         # text2[1].set_fill(DARK_BLUE)
-        text4 = Text('来得到一些圆锥曲线的性质？',
-            font='Microsoft YaHei')
+        text4 = CText('来得到一些圆锥曲线的性质？')
         
         group = VGroup(text1, text2, text3, text4)
         group.arrange_submobjects(direction=DOWN, buff=1)
@@ -39,14 +39,14 @@ class OpenScene(Scene):
 
         self.play(FadeOut(group))
 
-        explan1 = Text('本系列将试图用几何方法研究圆锥曲线', font='Microsoft YaHei')
-        explan2h = Text('主要参考', font='Microsoft YaHei')
-        explan2t = Text('《圆锥曲线的几何性质》', font='Microsoft YaHei')
+        explan1 = CText('本系列将试图用几何方法研究圆锥曲线')
+        explan2h = CText('主要参考')
+        explan2t = CText('《圆锥曲线的几何性质》')
         explan2 = VGroup(explan2h, explan2t)
         explan2.arrange()
         explan2t.set_fill(DARK_BLUE)
 
-        explan3 = Text('希望能有所帮助', font='Microsoft YaHei')
+        explan3 = CText('希望能有所帮助')
 
         explan = VGroup(explan1, explan2, explan3)
         explan.arrange_submobjects(direction=DOWN, buff=1)
@@ -61,13 +61,13 @@ class OpenScene(Scene):
         self.wait(2)
         self.play(FadeOut(explan))
 
-        jokeh = Text('视频使用', font='Microsoft YaHei')
-        jokeb = Text('manim', font='Microsoft YaHei')
-        joket = Text('制作', font='Microsoft YaHei')
+        jokeh = CText('视频使用')
+        jokeb = CText('manim')
+        joket = CText('制作')
 
         jokeb.set_fill(DARK_BLUE)
 
-        joked = Text('边学边做，随缘更新', font='Microsoft YaHei')
+        joked = CText('边学边做，随缘更新')
         jokeT = VGroup(jokeh, jokeb, joket, buff=SMALL_BUFF)
         jokeT.arrange()
 
@@ -81,7 +81,7 @@ class OpenScene(Scene):
         self.wait(2)
         self.play(FadeOut(joke))
 
-        last = Text('从抛物线开始', font='Microsoft YaHei')
+        last = CText('从抛物线开始')
         self.play(Write(last))
         self.wait()
         self.play(FadeOut(last))
@@ -93,42 +93,42 @@ class Definition(Parabola):
     }
     def construct(self):
         self.adjust_x_range()
-        lineText = Text('设有一固定直线l', font='Microsoft YaHei')
+        lineCText = CText('设有一固定直线l')
         directrix = self.get_directrix()
-        self.play(Write(lineText))
+        self.play(Write(lineCText))
         self.play(
-            ApplyMethod(lineText.scale, 0.3),
+            ApplyMethod(lineCText.scale, 0.3),
             ShowCreation(directrix)
         )
         self.play(
-            ApplyMethod(lineText.move_to, self.coords_to_point(-self.focus + 3, self.y_max - 2)),
+            ApplyMethod(lineCText.move_to, self.coords_to_point(-self.focus + 3, self.y_max - 2)),
         )
 
         self.wait()
 
-        focusText = Text('有一固定点F', font='Microsoft YaHei')
+        focusCText = CText('有一固定点F')
         focus = Circle()\
             .move_to(self.get_focus())\
             .scale(0.1)\
             .set_fill(ORANGE, opacity=1)
-        self.play(Write(focusText))
+        self.play(Write(focusCText))
         self.wait()
-        self.play(ApplyMethod(focusText.scale, 0.3))
+        self.play(ApplyMethod(focusCText.scale, 0.3))
         self.play(
-            ApplyMethod(focusText.move_to,
+            ApplyMethod(focusCText.move_to,
             self.coords_to_point(self.focus+3, 0)),
             ShowCreation(focus)
         )
         self.wait()
 
-        question = Text('求到直线距离l与到\n点P距离相等的点的轨迹', font='Microsoft YaHei')
+        question = CText('求到直线距离l与到\n点P距离相等的点的轨迹')
         question.scale(0.4)
         question.to_edge(RIGHT)
         
         self.play(Write(question))
         self.wait()
 
-        pickPoint = Text('在l上任取一点P', font='Microsoft YaHei')
+        pickPoint = CText('在l上任取一点P')
         pickPoint.scale(0.4)
         pickPoint.to_edge(DOWN)
 
@@ -144,7 +144,7 @@ class Definition(Parabola):
         self.wait()
         self.play(FadeOut(pickPoint))
 
-        connect = Text('连接FP', font='Microsoft YaHei')
+        connect = CText('连接FP')
         connect.scale((0.4))
         connect.to_edge(DOWN)
         fp = DashedLine(point.get_center(), focus.get_center())
@@ -153,7 +153,7 @@ class Definition(Parabola):
         self.play(ShowCreation(fp))
         self.wait()
 
-        midRight = Text('做FP中垂线', font='Microsoft YaHei')
+        midRight = CText('做FP中垂线')
         midRight.scale(0.4)
         midRight.to_edge(DOWN)
         midPoint = Circle()\
@@ -171,7 +171,7 @@ class Definition(Parabola):
         self.play(ShowCreation(midRightLine))
         self.wait()
 
-        right = Text('过P点做l的垂线', font='Microsoft YaHei')
+        right = CText('过P点做l的垂线')
         right.scale(0.4)
         right.to_edge(DOWN)
 
@@ -182,8 +182,8 @@ class Definition(Parabola):
         self.play(Write(right))
         self.play(ShowCreation(rightLine))
 
-        targetText = Text('垂线与中垂线交点即为曲线上的点', font='Microsoft YaHei')
-        targetText.scale(0.4).to_edge(DOWN)
+        targetCText = CText('垂线与中垂线交点即为曲线上的点')
+        targetCText.scale(0.4).to_edge(DOWN)
         target = Circle()\
             .scale(0.1)\
             .set_fill(RED, opacity=1)\
@@ -192,7 +192,7 @@ class Definition(Parabola):
             
 
         self.play(FadeOut(right))
-        self.play(Write(targetText))
+        self.play(Write(targetCText))
         self.play(DrawBorderThenFill(target))
 
         point.add_updater(lambda m: m.move_to(self.coords_to_point(-self.focus, y.get_value())))
@@ -223,33 +223,33 @@ class Definition(Parabola):
 
         self.play(ApplyMethod(y.set_value, 2, run_time=2))
 
-        directDef = Text('直线l称为准线', font='Microsoft YaHei')
+        directDef = CText('直线l称为准线')
         directDef.scale(0.4)
         directDef.to_edge(DOWN)
 
-        dire = Text('准线', font='Microsoft YaHei')
-        dire.scale(0.3).move_to(lineText.get_center())
-        dire.align_to(lineText, LEFT)
+        dire = CText('准线')
+        dire.scale(0.3).move_to(lineCText.get_center())
+        dire.align_to(lineCText, LEFT)
 
-        self.play(FadeOut(targetText))
+        self.play(FadeOut(targetCText))
         self.play(Write(directDef))
-        self.play(Transform(lineText, dire))
+        self.play(Transform(lineCText, dire))
 
         self.wait()
         self.play(FadeOut(directDef))
 
-        focDef = Text('点F称为焦点', font='Microsoft YaHei')
+        focDef = CText('点F称为焦点')
         focDef.scale(0.4).to_edge(DOWN)
-        foc = Text('焦点', font='Microsoft YaHei')
-        foc.scale(0.3).move_to(focusText.get_center())\
-            .align_to(focusText, LEFT)
+        foc = CText('焦点')
+        foc.scale(0.3).move_to(focusCText.get_center())\
+            .align_to(focusCText, LEFT)
 
         self.play(Write(focDef))
-        self.play(Transform(focusText, foc))
+        self.play(Transform(focusCText, foc))
         self.wait(3)
 
         self.play(ShowCreation(self.get_horizontal()))
-        self.play(Write(Text('轴', font='Microsoft YaHei')\
+        self.play(Write(CText('轴')\
             .scale(0.3).move_to(self.coords_to_point(5, 0.5))))
         self.play(ShowCreation(
             Circle()\
@@ -258,6 +258,6 @@ class Definition(Parabola):
                 .set_fill(DARK_BLUE, opacity=1)\
                 .move_to(self.coords_to_point(0, 0))
         ))
-        self.play(Write(Text('顶点', font='Microsoft YaHei')\
+        self.play(Write(CText('顶点')\
             .scale(0.3).move_to(self.coords_to_point(0.5, 0.5))))
         self.wait(3)
