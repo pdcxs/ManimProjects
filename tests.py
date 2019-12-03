@@ -42,3 +42,20 @@ class TextTest(Scene):
         text3.next_to(text2, DOWN)
         group.shift(-group.get_center())
         self.play(Write(group))
+
+class SquarePoints(Scene):
+    def construct(self):
+        outerSquare = Square().scale(2)
+        innerSquare = Square().scale(0.75).rotate(np.pi/3)
+        outerSquare.set_color(PURPLE)
+        outerSquare.set_fill(ORANGE, opacity=0.5)
+        innerSquare.set_color(BLUE)
+        innerSquare.set_fill(ORANGE, opacity=1)
+
+        self.play(ShowCreation(innerSquare), ShowCreation(outerSquare))
+        count = 0
+        for i, j in zip(outerSquare.points, innerSquare.points):
+            self.play(*[ShowCreation(Dot().move_to(e)) for e in [i, j]])
+            self.play(*[Write(TexMobject(str(count)).move_to(e)) for e in [i, j]])
+            count += 1
+        self.wait()
