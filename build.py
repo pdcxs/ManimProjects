@@ -15,7 +15,7 @@ projectPath = Path.joinpath(
 mediaPath = Path.joinpath(projectPath, 'media')
 
 files = []
-extraFiles = ['build.py', 'setup.py', 'media']
+extraFiles = ['build.py', 'setup.py', 'media', 'concat_video.py']
 
 def iterdir(targetDir):
     for f in targetDir.iterdir():
