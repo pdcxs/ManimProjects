@@ -2,6 +2,12 @@ from manimlib.imports import *
 from ManimProjects.utils.Parabola import Parabola
 from ManimProjects.utils.geometry import CText
 
+# To Run this code, you should modify manim source files.
+# In manimlib/mobject/mobject.py, add "plot_depth": 0 in the CONFIG of Mobject class
+# In manimlib/camera/camera.py
+# change the return line in extract_mpbject_family_members method to
+# return remove_list_redundancies(list(it.chain(*[method(m) for m in (mobjects.sort(key=lambda m:m.plot_depth) if len(mobjects)>0 else [])])))
+
 class OpenScene(Scene):
     def construct(self):
         text1 = CText('这是一条重要的性质')
@@ -30,6 +36,7 @@ class Prop1(Parabola):
         focusLabel = TexMobject('F').scale(0.75)
         focusLabel.next_to(focus, RIGHT, buff=SMALL_BUFF)
         self.directrix = directrix
+        focus.plot_depth = 1
 
         sub1 = CText('在抛物线上任取不同的两点P1,P2').scale(0.4)
         sub1.to_corner(RIGHT+DOWN)
@@ -39,9 +46,11 @@ class Prop1(Parabola):
 
         p1 = Dot()
         p1.add_updater(lambda m: m.move_to(self.value_to_point(p1_y.get_value())))
+        p1.plot_depth = 1
 
         p2 = Dot()
         p2.add_updater(lambda m: m.move_to(self.value_to_point(p2_y.get_value())))
+        p2.plot_depth = 1
 
         p1.set_fill(RED)
         p2.set_fill(RED)
@@ -54,7 +63,7 @@ class Prop1(Parabola):
         p2Label.add_updater(lambda m:\
             m.next_to(p2, LEFT+UP, buff=SMALL_BUFF))
 
-        sub2 = CText('连接两点，延长交准线与点K')
+        sub2 = CText('连接两点，延长交准线于点K')
         sub2.scale(0.4).to_corner(RIGHT+DOWN)
 
         ppLine = Line()
@@ -64,6 +73,7 @@ class Prop1(Parabola):
             self.get_directrix_point(p1, p2)))
 
         k = Dot()
+        k.plot_depth = 1
         k.set_fill(DARK_BLUE)
         k.add_updater(lambda m: m.move_to(ppLine.points[-1]))
 
@@ -83,7 +93,7 @@ class Prop1(Parabola):
             m.put_start_and_end_on(p2.get_center(),\
             focus.get_center()))
 
-        sub4 = CText('延长P1F交准备与D')
+        sub4 = CText('延长P1F交准线于D')
         sub4.scale(0.4).to_corner(RIGHT+DOWN)
 
         p1fd = Line()
@@ -92,6 +102,7 @@ class Prop1(Parabola):
             focus.get_center(),\
             self.get_directrix_point(p1, focus)))
         d = Dot()
+        d.plot_depth = 1
         d.set_fill(DARK_BLUE)
         d.add_updater(lambda m: m.move_to(p1fd.points[-1]))
         dLabel = TexMobject('D')
@@ -178,6 +189,7 @@ class Prop1(Parabola):
         angs.shift(3*RIGHT + 2*UP)
 
         m1 = Dot()
+        m1.plot_depth = 1
         m1.set_fill(ORANGE)
         m1.add_updater(lambda m:\
             m.move_to(self.coords_to_point(
@@ -185,6 +197,7 @@ class Prop1(Parabola):
             )))
 
         m2 = Dot()
+        m2.plot_depth = 1
         m2.set_fill(ORANGE)
         m2.add_updater(lambda m:\
             m.move_to(self.coords_to_point(
@@ -248,6 +261,7 @@ class Prop1(Parabola):
         remover = Rectangle(height=FRAME_HEIGHT, width=FRAME_WIDTH)
         remover.set_color(BLACK)
         remover.set_fill(BLACK, opacity=1)
+        remover.plot_depth = 2
         # kp2 = Line()
         # kp2.add_updater(lambda m:\
         #     m.put_start_and_end_on(k.get_center(),
@@ -312,11 +326,21 @@ class Prop1(Parabola):
 
         self.play(Write(fracs))
         self.wait(5)
-        self.play(ReplacementTransform(fracs, fracs2))
+        #self.play(ReplacementTransform(fracs, fracs2))
+        self.play(FadeOut(fracs[4:8]))
+        self.play(*[ApplyMethod(fracs[i].move_to, fracs[i - 4].get_center()) for i in range(8, 11)])
+
+        # self.play(FadeOut(fracs), FadeIn(fracs2), run_time=0.1)
+
+        # self.wait(5)
+        # self.play(ReplacementTransform(fracs2, fracs3))
+        self.wait(5)
+        pos1 = fracs[2].get_center()
+        pos2 = fracs[8].get_center()
+        self.play(ApplyMethod(fracs[2].move_to, pos2),
+            ApplyMethod(fracs[8].move_to, pos1))
 
         self.wait(5)
-        self.play(ReplacementTransform(fracs2, fracs3))
-
         self.play(Write(explain))
         self.wait(3)
 
@@ -332,6 +356,7 @@ class Prop1(Parabola):
         ).set_fill(DARK_BLUE, opacity=1)), run_time=3)
         self.play(Write(fracs4[3:]))
 
+        self.wait(3)
         self.play(Write(form))
         self.wait(3)
         self.play(Write(form2))
