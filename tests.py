@@ -59,3 +59,21 @@ class SquarePoints(Scene):
             self.play(*[Write(TexMobject(str(count)).move_to(e)) for e in [i, j]])
             count += 1
         self.wait()
+
+class TwoCircleInter(VMobject):
+    def __init__(self, left_down=ORIGIN, radius=1, **kwargs):
+        self.top_arc = Arc(PI / 2, PI/2)\
+            .move_arc_center_to(ORIGIN + RIGHT * radius)
+        self.down_arc = Arc(3 * PI / 2, PI/2)\
+            .move_arc_center_to(ORIGIN + UP * radius)
+        VMobject.__init__(self, **kwargs)
+
+    def generate_points(self):
+        self.append_points(self.top_arc.points)
+        self.append_points(self.down_arc.points)
+
+class TwoCircleTest(Scene):
+    def construct(self):
+        a = TwoCircleInter()
+        a.set_fill(LIGHT_BROWN, opacity=1)
+        self.play(ShowCreation(a))
