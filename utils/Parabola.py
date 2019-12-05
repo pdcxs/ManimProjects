@@ -53,3 +53,47 @@ class Parabola(Scene):
         to_y = self.map(y, self.y_min, self.y_max,
             -FRAME_Y_RADIUS, FRAME_Y_RADIUS)
         return to_x * RIGHT + to_y * UP
+
+    def point_to_coords(self, point):
+        pos = point.get_center()
+        x = pos[0]
+        y = pos[1]
+        to_x = self.map(x, -FRAME_X_RADIUS,
+            FRAME_X_RADIUS,
+            self.x_min,
+            self.x_max)
+        to_y = self.map(y, -FRAME_Y_RADIUS,
+            FRAME_Y_RADIUS,
+            self.y_min,
+            self.y_max)
+        return [to_x, to_y]
+
+    def get_opposite_y(self, y):
+        f = self.focus
+        return -4 * f * f / y
+
+    def get_opposite(self, point):
+        pos = self.point_to_coords(point)
+        [x, y] = pos
+        opp_y = self.get_opposite_y(y)
+        opp_x = self.func(opp_y)
+        return self.coords_to_point(opp_x, opp_y)
+
+    def chord_to_directrix(self, p1, p2):
+        # p1 on left, p2 on right
+        if (p1.get_center()[0] > p2.get_center()[0]):
+            p1, p2 = p2, p1
+        pos1 = p1.get_center()
+        pos2 = p2.get_center()
+        vec = pos1 - pos2
+        vec /= vec[0]
+        dest_x = self.coords_to_point(-self.focus, 0)[0]
+        fac = dest_x - pos1[0]
+        return pos1 + vec * fac
+
+    def right(self, point1, point2):
+        pos1 = point1.get_center()
+        pos2 = point2.get_center()
+        if pos1[0] > pos2[0]:
+            return pos1
+        return pos2
