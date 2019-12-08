@@ -30,7 +30,7 @@ iterdir(projectPath)
 
 print("Please select your file:")
 for i, f in enumerate(files, 1):
-    print('%d:\t%s' % (i, f))
+    print('%d:\t%s' % (i, f.relative_to(projectPath)))
 
 select = input('Build File: ')
 
