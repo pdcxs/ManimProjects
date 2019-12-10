@@ -259,19 +259,27 @@ class FourierCirclesScene(Scene):
 
         return result
 
-class FourierOfPiSymbol(FourierCirclesScene):
+class FourierOfPiSymbol(FourierCirclesScene, ZoomedScene):
     CONFIG = {
         "n_vectors": 51,
         "center_point": ORIGIN,
         "slow_factor": 0.1,
-        "n_cycles": 1,
+        "n_cycles": 2,
         "tex": "\\pi",
         "start_drawn": False,
         "max_circle_stroke_width": 1,
+        "zoomed_display_height": 2,
+        "zoomed_display_width": 2,
+        "zoom_factor": 0.05,
+        "slow_factor": 0.01,
     }
 
     def construct(self):
+        ZoomedScene.setup(self)
         self.add_vectors_circles_path()
+        self.activate_zooming()
+        self.zoomed_camera.frame.add_updater(lambda m:\
+            m.move_to(self.vectors[-1].get_end()))
         for n in range(self.n_cycles):
             self.run_one_cycle()
 
@@ -316,4 +324,30 @@ class FourierOfPiSymbol(FourierCirclesScene):
         path = tex_mob.family_members_with_points()[0]
         path.set_fill(opacity=0)
         path.set_stroke(WHITE, 1)
+        return path
+
+class FourierOfSVG(FourierOfPiSymbol):
+    CONFIG = {
+        "file_name": "camel.svg",
+        "height": 6,
+        "n_vectors": 100,
+    }
+
+    # def construct(self):
+    #     path = self.get_path()
+    #     self.add(path)
+
+    def get_shape(self):
+        shape = SVGMobject(self.file_name)
+        return shape
+
+    def get_path(self):
+        shape = self.get_shape()
+        path = shape.family_members_with_points()[0]
+        path.add_line_to(path.get_start())
+        # path.make_smooth()
+
+        path.set_height(self.height)
+        path.set_fill(opacity=0)
+        path.set_stroke(WHITE, 0)
         return path
