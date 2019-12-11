@@ -86,6 +86,8 @@ class Parabola(Scene):
         pos1 = p1.get_center()
         pos2 = p2.get_center()
         vec = pos1 - pos2
+        if vec[0] == 0:
+            return self.coords_to_point(-self.focus, 0)
         vec /= vec[0]
         dest_x = self.coords_to_point(-self.focus, 0)[0]
         fac = dest_x - pos1[0]
