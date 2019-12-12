@@ -77,3 +77,39 @@ class TwoCircleTest(Scene):
         a = TwoCircleInter()
         a.set_fill(LIGHT_BROWN, opacity=1)
         self.play(ShowCreation(a))
+
+class GetCorner(Scene):
+    def construct(self):
+        poly = RegularPolygon(5)
+        poly.scale(2)
+        angle_n = 1
+        l1 = Line()
+        l1.add_updater(lambda l:
+            l.put_start_and_end_on(
+                poly.get_vertices()[angle_n - 1],
+                poly.get_vertices()[angle_n]
+            ))
+        l1.set_color(RED)
+
+        l2 = Line()
+        l2.add_updater(lambda l:
+            l.put_start_and_end_on(
+                poly.get_vertices()[angle_n + 1],
+                poly.get_vertices()[angle_n]
+            ))
+        l2.set_color(RED)
+
+        ang = ArcBetweenPoints(LEFT, RIGHT)
+        ang.add_updater(lambda a: a.put_start_and_end_on(
+            poly.get_vertices()[angle_n] + 0.5 * normalize(
+                poly.get_vertices()[angle_n + 1] -\
+                poly.get_vertices()[angle_n]),
+            poly.get_vertices()[angle_n] + 0.5 * normalize(
+                poly.get_vertices()[angle_n - 1] -\
+                poly.get_vertices()[angle_n]),
+        ))
+
+        self.play(ShowCreation(poly))
+        self.play(ShowCreation(l1), ShowCreation(l2))
+        self.play(ShowCreation(ang))
+        self.play(Rotate(poly, PI))
