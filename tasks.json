@@ -12,7 +12,7 @@
                 "${workspaceFolder}",
                 "${relativeFile}",
                 "${lineNumber}",
-                "-pl",
+                "-pl"
             ],
             "group": {
                 "kind": "build",
@@ -31,7 +31,7 @@
                 "${workspaceFolder}",
                 "${relativeFile}",
                 "${lineNumber}",
-                "-p",
+                "-p"
             ],
             "group": {
                 "kind": "build",
@@ -50,7 +50,7 @@
                 "${workspaceFolder}",
                 "${relativeFile}",
                 "${lineNumber}",
-                "-pm",
+                "-pm"
             ],
             "group": {
                 "kind": "build",
@@ -69,7 +69,7 @@
                 "${workspaceFolder}",
                 "${relativeFile}",
                 "${lineNumber}",
-                "-ps",
+                "-ps"
             ],
             "group": {
                 "kind": "build",
