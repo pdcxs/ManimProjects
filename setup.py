@@ -14,7 +14,8 @@ if not path.is_file():
 
 with open(path, 'a') as f:
     f.write('\n' + fileDir.name)
-    f.write('\nbuild.py\n')
+    f.write('\nbuild.py')
+    f.write('\nbuild.ps1\n')
 print('Done')
 
 # copy run code to manim project
@@ -23,6 +24,24 @@ import shutil
 print('Copy build.py to %s' % path.parent)
 cmd = Path.joinpath(fileDir, 'build.py')
 shutil.copy(cmd, path.parent)
+print('Done')
+
+print('Copy build.ps1 to %s' % path.parent)
+cmd = Path.joinpath(fileDir, 'build.ps1')
+shutil.copy(cmd, path.parent)
+print('Done')
+
+print('Does .vscode exist?')
+vscode_path = Path.joinpath(fileDir.parent, '.vscode')
+if vscode_path.is_dir():
+    print('Yes, .vscode exists')
+else:
+    print('No. Making .vscode')
+    vscode_path.mkdir()
+print('Copy task.json %s' % path.parent)
+shutil.copy(
+    Path.joinpath(fileDir, 'task.json'),
+    vscode_path)
 print('Done')
 
 # Making media directory
