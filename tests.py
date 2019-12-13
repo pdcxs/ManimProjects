@@ -77,3 +77,34 @@ class TwoCircleTest(Scene):
         a = TwoCircleInter()
         a.set_fill(LIGHT_BROWN, opacity=1)
         self.play(ShowCreation(a))
+
+class IrregularSector(Arc):
+    CONFIG = {
+        "inner_radius": 1,
+    }
+
+    def generate_points(self):
+        self.outter_radius = 2 * self.inner_radius
+        inner_arc = Arc(
+                start_angle=PI,
+                angle=PI/2,
+                radius=self.inner_radius,
+                arc_center=self.inner_radius * UP + self.inner_radius * RIGHT,
+            )
+        outer_arc = Arc(
+                start_angle=PI,
+                angle=PI/2,
+                radius=self.outter_radius,
+                arc_center=self.outter_radius * UP + self.outter_radius * RIGHT,
+            )
+        outer_arc.reverse_points()
+        self.append_points(inner_arc.points)
+        self.add_line_to(outer_arc.points[0])
+        self.append_points(outer_arc.points)
+        self.add_line_to(inner_arc.points[0])
+
+class IrregularSectorTest(Scene):
+    def construct(self):
+        shape = IrregularSector()
+        shape.set_fill(DARK_BLUE, opacity=1)
+        self.play(ShowCreation(shape))
