@@ -1,0 +1,81 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "low quality",
+            "type": "shell",
+            "command": "build.sh",
+            "windows": {
+                "command": "${workspaceFolder}\\build.ps1"
+            },
+            "args": [
+                "${workspaceFolder}",
+                "${relativeFile}",
+                "${lineNumber}",
+                "-pl",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "high quality",
+            "type": "shell",
+            "command": "build.sh",
+            "windows": {
+                "command": "${workspaceFolder}\\build.ps1"
+            },
+            "args": [
+                "${workspaceFolder}",
+                "${relativeFile}",
+                "${lineNumber}",
+                "-p",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "medium quality",
+            "type": "shell",
+            "command": "build.sh",
+            "windows": {
+                "command": "${workspaceFolder}\\build.ps1"
+            },
+            "args": [
+                "${workspaceFolder}",
+                "${relativeFile}",
+                "${lineNumber}",
+                "-pm",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "last frame",
+            "type": "shell",
+            "command": "build.sh",
+            "windows": {
+                "command": "${workspaceFolder}\\build.ps1"
+            },
+            "args": [
+                "${workspaceFolder}",
+                "${relativeFile}",
+                "${lineNumber}",
+                "-ps",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+    ]
+}
