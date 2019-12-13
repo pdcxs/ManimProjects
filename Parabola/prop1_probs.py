@@ -498,3 +498,280 @@ class Prob3(Parabola):
         self.play(ApplyMethod(q1_y.set_value, 3),
             ApplyMethod(p1_y.set_value, -9))
         self.wait(10)
+
+class Prob4(Parabola):
+    CONFIG = {
+        'focus': 3,
+        'x_min': -10
+    }
+    def construct(self):
+        self.adjust_x_range()
+        graph = self.get_graph(color=LIGHT_BROWN)
+        directrix = self.get_directrix()
+        focus = Dot().move_to(self.get_focus())
+        focus.set_fill(DARK_BROWN)
+        focus.plot_depth = 1
+        focusLabel = TexMobject('F').scale(0.5)
+        focusLabel.next_to(focus, RIGHT)
+
+        self.play(*[ShowCreation(e) for\
+            e in [graph, directrix, focus, focusLabel]])
+
+        a = Dot()
+        a.set_fill(DARK_BROWN)
+        a.move_to(self.coords_to_point(0, 0))
+        a.plot_depth = 1
+        a_label = TexMobject('A').scale(0.5)
+        a_label.next_to(a, RIGHT)
+
+        self.play(*[ShowCreation(e) for e in [a, a_label]])
+
+        y_val = ValueTracker(8)
+
+        m = Dot()
+        m.set_fill(DARK_BLUE)
+        m.plot_depth = 1
+        m.add_updater(lambda m:\
+            m.move_to(self.coords_to_point(
+                -self.focus, y_val.get_value()
+            )))
+        m_label = TexMobject('M').scale(0.5)
+        m_label.add_updater(lambda l:\
+            l.next_to(m, LEFT))
+
+        p = Dot()
+        p.set_fill(DARK_BLUE)
+        p.plot_depth = 1
+        p.add_updater(lambda m:\
+            m.move_to(self.coords_to_point(
+                self.func(y_val.get_value()),
+                y_val.get_value()
+            )))
+        p_label = TexMobject('P').scale(0.5)
+        p_label.add_updater(lambda m:\
+            m.next_to(p, RIGHT))
+        self.play(*[ShowCreation(e) for e in\
+            [m, m_label, p, p_label]])
+
+        k = Dot()
+        k.set_fill(DARK_BLUE)
+        k.plot_depth = 1
+        k.add_updater(lambda m:\
+            m.move_to(self.chord_to_directrix(
+                p, a
+            )))
+        k_label = TexMobject('K').scale(0.5)
+        k_label.add_updater(lambda m:\
+            m.next_to(k, LEFT))
+        
+        pk = Line()
+        pk.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                p.get_center(),
+                self.chord_to_directrix(p, a)
+            ))
+        mp = Line()
+        mp.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                m.get_center(),
+                p.get_center()
+            ))
+        self.play(*[ShowCreation(e) for e in\
+            [k, k_label, pk, mp]])
+
+        kf = Line()
+        kf.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                k.get_center(),
+                focus.get_center()
+            ))
+        mf = Line()
+        mf.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                m.get_center(),
+                focus.get_center()
+            ))
+
+        self.play(ShowCreation(kf), ShowCreation(mf))
+
+        form = TexMobject('KF \\perp MF')
+        form.scale(0.7)
+        form.to_edge(RIGHT)
+        self.play(Write(form))
+
+        af = DashedLine(a.get_center(), focus.get_center())
+        pf = DashedLine()
+
+        def get_pf_extent():
+            vec = focus.get_center() - p.get_center()
+            vec = normalize(vec)
+            return focus.get_center() + 2 * vec
+
+        pf.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                p.get_center(),
+                get_pf_extent()
+            ))
+        self.play(ShowCreation(af), ShowCreation(pf))
+
+        self.wait(3)
+        self.play(ApplyMethod(y_val.set_value, 2))
+        self.wait(3)
+        self.play(ApplyMethod(y_val.set_value, -2))
+        self.wait(3)
+        self.play(ApplyMethod(y_val.set_value, -8))
+        self.wait(10)
+
+class Prob5(Parabola):
+    CONFIG = {
+        'focus': 3,
+        'x_min': -10
+    }
+    def construct(self):
+        self.adjust_x_range()
+        graph = self.get_graph(color=LIGHT_BROWN)
+        directrix = self.get_directrix()
+        focus = Dot().move_to(self.get_focus())
+        focus.set_fill(DARK_BROWN)
+        focus.plot_depth = 1
+        focusLabel = TexMobject('F').scale(0.5)
+        focusLabel.next_to(focus, RIGHT + UP)
+
+        self.play(*[ShowCreation(e) for\
+            e in [graph, directrix, focus, focusLabel]])
+
+        h_line = self.get_horizontal()
+        x = Dot()
+        x.set_fill(DARK_BROWN)
+        x.plot_depth = 1
+        x.move_to(self.coords_to_point(-self.focus, 0))
+        x_label = TexMobject('X').scale(0.5)
+        x_label.next_to(x, LEFT + UP)
+
+        self.play(ShowCreation(h_line))
+        self.play(ShowCreation(x), ShowCreation(x_label))
+
+        y_val = ValueTracker(8)
+        p = Dot()
+        p.set_fill(DARK_BLUE)
+        p.plot_depth = 1
+        p.add_updater(lambda m:\
+            m.move_to(self.coords_to_point(
+                self.func(y_val.get_value()),
+                y_val.get_value()
+            )))
+        
+        q = Dot()
+        q.set_fill(DARK_BLUE)
+        q.plot_depth = 1
+        q.add_updater(lambda m:\
+            m.move_to(self.coords_to_point(
+                self.func(-y_val.get_value()),
+                -y_val.get_value()
+            )))
+
+        t = Dot()
+        t.set_fill(DARK_BLUE)
+        t.plot_depth = 1
+        t.add_updater(lambda m:\
+            m.move_to(self.coords_to_point(
+                self.func(y_val.get_value()), 0
+            )))
+
+        p_label = TexMobject('P').scale(0.5)
+        p_label.add_updater(lambda m:\
+            m.next_to(p, RIGHT))
+        q_label = TexMobject('Q').scale(0.5)
+        q_label.add_updater(lambda m:\
+            m.next_to(q, RIGHT))
+        t_label = TexMobject('T').scale(0.5)
+        t_label.add_updater(lambda m:\
+            m.next_to(t, RIGHT + UP))
+
+        pq = Line()
+        pq.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                p.get_center(),
+                self.coords_to_point(
+                    self.func(-y_val.get_value()),
+                    -y_val.get_value()
+            )))
+        pt = Line()
+        pt.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                p.get_center(),
+                self.coords_to_point(
+                    self.func(y_val.get_value()), 0
+                )))
+        self.play(ShowCreation(p), ShowCreation(p_label))
+        self.play(ShowCreation(pt))
+        self.play(ShowCreation(t), ShowCreation(t_label))
+        label1 = CText('纵标线').scale(0.3)\
+                .next_to(pt, RIGHT)
+        self.play(ShowCreation(label1))
+        self.wait()
+        self.play(FadeOut(label1))
+        self.play(ShowCreation(pq))
+        self.remove(pt)
+        self.play(ShowCreation(q), ShowCreation(q_label))
+        label2 = CText('双纵标线').scale(0.3)\
+                .next_to(t, RIGHT+DOWN)
+        self.play(ShowCreation(label2))
+        self.wait()
+        self.play(FadeOut(label2))
+        self.wait()
+        
+        inter = Dot()
+        inter.set_fill(DARK_BLUE)
+        inter.plot_depth = 1
+        inter.add_updater(lambda m:\
+            m.move_to(
+                self.coords_to_point(
+                    4*(self.focus**3)/(y_val.get_value()**2),
+                    4*self.focus**2/y_val.get_value()
+                ) if y_val.get_value() != 0 else
+                    self.coords_to_point(0, 0)
+            ))
+
+        inter_label = TexMobject("P'").scale(0.5)
+        inter_label.add_updater(lambda m:\
+            m.next_to(inter, LEFT + UP, buff=SMALL_BUFF))
+
+        px = Line()
+        px.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                self.right(p, inter),
+                x.get_center()
+            ))
+        
+        self.play(ShowCreation(px))
+        self.play(ShowCreation(inter),
+            ShowCreation(inter_label))
+        self.wait()
+
+        form = CText("P'Q经过焦点").shift(UP)
+        form.scale(0.5)
+        form.to_edge(RIGHT)
+        self.play(Write(form))
+        
+        interq = Line()
+        interq.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                inter.get_center(),
+                q.get_center()
+            ))
+        self.play(ShowCreation(interq))
+
+        self.wait(2)
+        self.play(ApplyMethod(y_val.set_value, 4))
+
+        self.wait(2)
+        self.play(ApplyMethod(y_val.set_value, -4))
+
+        self.wait(2)
+        self.play(ApplyMethod(y_val.set_value, -9))
+
+        self.wait(2)
+        self.play(ApplyMethod(y_val.set_value, 9))
+
+        self.wait(10)

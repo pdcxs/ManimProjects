@@ -27,6 +27,7 @@ def iterdir(targetDir):
                 files.append(f)
 
 iterdir(projectPath)
+files.sort(key=lambda m:m.stat().st_mtime, reverse=True)
 
 print("Please select your file:")
 for i, f in enumerate(files, 1):
