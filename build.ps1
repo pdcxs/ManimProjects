@@ -6,12 +6,20 @@ $option = $args[3]
 conda activate manim
 
 Set-Location $project_dir
+$content = Get-Content $file
 
-$code = Get-Content $file | Select-Object -Index ($line - 1)
-$code = $code.trim()
+For ($l = $line; $l -GT 0; $l--) {
+    $code = $content | Select-Object -Index ($l - 1)
+    If ($Null -EQ $code) {
+        Continue
+    }
+    If ($code.StartsWith("class")) {
+        Break
+    }
+}
 
-if (-Not $code.StartsWith("class")) {
-    Write-Output "Wrong line: $code"
+If (-Not $code.StartsWith("class")) {
+    Write-Output "Cannot Find Class"
     exit
 }
 

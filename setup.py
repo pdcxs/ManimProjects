@@ -38,9 +38,9 @@ if vscode_path.is_dir():
 else:
     print('No. Making .vscode')
     vscode_path.mkdir()
-print('Copy task.json %s' % path.parent)
+print('Copy tasks.json %s' % path.parent)
 shutil.copy(
-    Path.joinpath(fileDir, 'task.json'),
+    Path.joinpath(fileDir, 'tasks.json'),
     vscode_path)
 print('Done')
 
