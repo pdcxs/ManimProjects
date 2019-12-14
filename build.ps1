@@ -3,7 +3,7 @@ $file = $args[1]
 $line = $args[2]
 $option = $args[3]
 
-conda activate manim
+Invoke-Expression "conda activate manim"
 
 Set-Location $project_dir
 $content = Get-Content $file
