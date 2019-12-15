@@ -28,7 +28,7 @@ if len(video_files) == 0:
 
 print("Please select your video file(s) (seperate by ,):")
 for i, f in enumerate(video_files, 1):
-    print('%d:\t%s' % (i, f))
+    print('%d:\t%s' % (i, f.relative_to(video_path)))
 
 select = input('Video File(s): ')
 
