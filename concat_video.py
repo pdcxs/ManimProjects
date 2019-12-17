@@ -3,7 +3,7 @@ import os
 import tempfile
 from pathlib import Path
 
-media_dir = 'media/videos'
+media_dir = '../media/videos'
 if len(sys.argv) > 1:
     media_dir = sys.argv[1]
 
