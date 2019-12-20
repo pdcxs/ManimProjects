@@ -186,3 +186,15 @@ class ParametricTest(Scene):
         self.play(t.set_value, 3 * TAU,\
             rate_func=linear,
             run_time = 3)
+
+class LaggedStartTest(Scene):
+    def construct(self):
+        circles = VGroup()
+        for i in range(5):
+            c = Circle(radius=0.3)
+            c.move_to((i - 2) * RIGHT)
+            circles.add(c)
+        self.play(LaggedStartMap(
+            ShowCreation,
+            circles,
+            lag_ratio=0.2))
