@@ -160,3 +160,29 @@ class MovingCameraTest(MovingCameraScene):
         self.play(ApplyMethod(
             self.camera.frame.scale,
             2), run_time=10, rate_func=linear)
+
+class ParametricTest(Scene):
+    def construct(self):
+        t = ValueTracker(0)
+        def get_rad():
+            return np.sin(t.get_value()) + 2
+
+        graph = ParametricFunction(lambda alpha:\
+            get_rad() * (\
+                np.cos(alpha * TAU) * RIGHT +\
+                np.sin(alpha * TAU) * UP))
+
+        def set_func(m):
+            m.function = lambda alpha:\
+            get_rad() * (\
+                np.cos(alpha * TAU) * RIGHT +\
+                np.sin(alpha * TAU) * UP)
+            m.clear_points()
+            m.generate_points()
+
+        graph.add_updater(set_func)
+
+        self.add(graph)
+        self.play(t.set_value, 3 * TAU,\
+            rate_func=linear,
+            run_time = 3)
