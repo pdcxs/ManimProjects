@@ -143,3 +143,20 @@ class GetCorner(Scene):
         self.play(ShowCreation(l1), ShowCreation(l2))
         self.play(ShowCreation(ang))
         self.play(Rotate(poly, PI))
+
+class MovingCameraTest(MovingCameraScene):
+    def construct(self):
+        for i in range(500):
+            d = Dot()
+            x = random.randint(
+                -2 * int(FRAME_X_RADIUS),
+                2 * int(FRAME_X_RADIUS))
+            y = random.randint(
+                -2 * int(FRAME_Y_RADIUS),
+                2 * int(FRAME_Y_RADIUS))
+            d.move_to(x * RIGHT + y * UP)
+            self.add(d)
+        
+        self.play(ApplyMethod(
+            self.camera.frame.scale,
+            2), run_time=10, rate_func=linear)
