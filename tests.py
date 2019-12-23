@@ -198,3 +198,17 @@ class LaggedStartTest(Scene):
             ShowCreation,
             circles,
             lag_ratio=0.2))
+
+class DoubleDashedArrow(Scene):
+    def construct(self):
+        a = DashedLine(LEFT * 3, RIGHT * 3)
+
+        tip = a.create_tip(tip_length=0.5, at_start=True)
+        tip2 = a.create_tip(tip_length=0.5, at_start=False)
+        a.reset_endpoints_based_on_tip(tip, at_start=True)
+        a.reset_endpoints_based_on_tip(tip2, at_start=False)
+        a.asign_tip_attr(tip, at_start=True)
+        a.asign_tip_attr(tip2, at_start=False)
+        a.add(tip)
+        a.add(tip2)
+        self.play(ShowCreation(a))
