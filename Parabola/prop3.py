@@ -1,6 +1,6 @@
 from manimlib.imports import *
 from ManimProjects.utils.Parabola import Parabola
-from ManimProjects.utils.geometry import CText
+from ManimProjects.utils.geometry import *
 
 class Prop3(Parabola):
     CONFIG = {
@@ -48,3 +48,13 @@ class Prop3(Parabola):
         self.play(ShowCreation(p))
         self.play(ShowCreation(tangent))
         self.play(ShowCreation(k))
+
+        ang2 = Angle(k, p, focus)
+        ang2.make_angle_dynamic()
+        ang2_label = TexMobject('2').scale(0.5)
+        ang2.add_label(ang2_label)
+
+        self.play(ShowCreation(ang2))
+        self.play(ShowCreation(ang2_label))
+
+        self.play(y_val.set_value, 4)
