@@ -82,6 +82,6 @@ class Angle(Arc):
         self.append_points(arc.points)
         if (self.show_edge):
             self.add_line_to(o)
-            self.add_points([o])
+            self.append_points([o])
             self.add_line_to(arc.points[0])
         
