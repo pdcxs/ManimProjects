@@ -99,3 +99,21 @@ class Parabola(Scene):
         if pos1[0] > pos2[0]:
             return pos1
         return pos2
+
+    def get_tangent_to_directrix(self, point):
+        [x, y] = self.point_to_coords(point)
+        d = y / (2 * self.focus)
+        dx = -self.focus - x
+        dy = dx / d
+        return self.coords_to_point(
+            -self.focus,
+            y + dy
+        )
+
+    def add_tangent_line_updater(self, line, point):
+        pos = self.get_tangent_to_directrix(point)
+        line.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                point.get_center(),
+                pos
+            ))
