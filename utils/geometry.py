@@ -10,13 +10,14 @@ class Angle(Arc):
     CONFIG = {
         "radius": 0.5,
         "color": WHITE,
-        "show_edge": False
+        "show_edge": False,
     }
-    def __init__(self, p1, p2, p3, **kwargs):
+    def __init__(self, p1, p2, p3, inner=True, **kwargs):
         self.p1 = p1
         self.p2 = p2
         self.p3 = p3
         self.arc_center = p2.get_center()
+        self.inner = inner
         Arc.__init__(self,
             start_angle=self.get_start_angle(),
             angle = self.get_angle(),
@@ -50,8 +51,17 @@ class Angle(Arc):
         x = vec[0]
         y = vec[1]
 
-        return math.atan2(y, x) -\
+        angle = math.atan2(y, x) -\
             self.get_start_angle()
+        
+        if angle < 0:
+            angle += TAU
+        
+        if (self.inner and angle > PI) or\
+            (not self.inner and angle < PI):
+            angle = TAU - angle
+        
+        return angle
 
     def make_angle_dynamic(self):
         self.add_updater(lambda m: m.generate_points())
