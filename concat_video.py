@@ -21,6 +21,9 @@ def iterdir(targetDir):
                 video_files.append(f)
 
 iterdir(video_path)
+video_files.sort(
+    key=lambda m:m.stat().st_mtime,
+    reverse=True)
 
 if len(video_files) == 0:
     print('Cannot find any mp4 files in {}'.format(video_path))
