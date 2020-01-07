@@ -188,3 +188,189 @@ class Prob1(Parabola):
         self.play(Write(sub7))
 
         self.wait(10)
+
+class Prob2Open(Scene):
+    def construct(self):
+        line1_1 = CText('抛物线')
+        line1_1.set_fill(DARK_BLUE)
+
+        line1_2 = CText('性质三')
+        line1 = VGroup(line1_1, line1_2)
+        line1.arrange(RIGHT)
+        line2 = CText('推论二')
+        lines = VGroup(line1, line2)
+        lines.arrange(DOWN, buff=LARGE_BUFF)
+        self.play(Write(line1))
+        self.wait(3)
+        self.play(Write(line2))
+        self.wait(3)
+        
+        self.play(FadeOut(lines))
+
+class Prob2(Parabola):
+    CONFIG = {
+        'x_min' : -5,
+        'focus' : 2
+    }
+    def construct(self):
+        self.adjust_x_range()
+        graph = self.get_graph(color=LIGHT_BROWN)
+        directrix = self.get_directrix()
+        focus = Dot().move_to(self.get_focus())
+        focus.set_fill(DARK_BROWN)
+        focus.plot_depth = 1
+        focusLabel = TexMobject('F').scale(0.5)
+        focusLabel.next_to(focus, RIGHT, buff=SMALL_BUFF)
+
+        self.play(*[ShowCreation(e) for\
+            e in [graph, directrix, focus, focusLabel]])
+
+        y_val = ValueTracker(8)
+        
+        p = Dot()
+        p.plot_depth = 1
+        p.set_fill(DARK_BLUE)
+        p.add_updater(lambda m:\
+            m.move_to(self.coords_to_point(
+                self.func(y_val.get_value()),
+                y_val.get_value()
+            )))
+
+        p_label = TexMobject('P').scale(0.5)
+        p_label.plot_depth = 1
+        p_label.add_updater(lambda m:\
+            m.next_to(p, RIGHT, buff=SMALL_BUFF))
+
+        k = Dot()
+        k.plot_depth = 1
+        k.set_fill(DARK_BLUE)
+        k.add_updater(lambda m:\
+            m.move_to(self.get_tangent_to_directrix(
+                p
+            )))
+        
+        k_label = TexMobject('K').scale(0.5)
+        k_label.plot_depth = 1
+        k_label.add_updater(lambda m:\
+            m.next_to(k, LEFT, buff=SMALL_BUFF))
+        
+        tangent = Line()
+        self.add_tangent_line_updater(tangent, p)
+
+        self.play(ShowCreation(p))
+        self.play(ShowCreation(p_label))
+        self.play(ShowCreation(tangent))
+        self.play(ShowCreation(k))
+        self.play(ShowCreation(k_label))
+        
+        def get_extent(l):
+            l.put_start_and_end_on(p.get_center(),
+                RIGHT * 10)
+            l.set_angle(tangent.get_angle() + PI)
+        tangent_extent = Line()
+        tangent_extent.add_updater(lambda l:\
+            get_extent(l))
+
+        self.play(ShowCreation(tangent_extent))
+        self.wait()
+
+        m = Dot()
+        m.set_fill(DARK_BLUE)
+        m.plot_depth = 1
+        m.add_updater(lambda e:\
+            e.move_to(self.coords_to_point(
+                -self.focus,
+                y_val.get_value()
+            )))
+        
+        m_label = TexMobject('M').scale(0.5)
+        m_label.add_updater(lambda e:\
+            e.next_to(m, LEFT, buff=SMALL_BUFF))
+        
+        mp = Line()
+        mp.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                p.get_center(),
+                self.coords_to_point(
+                    -self.focus,
+                    y_val.get_value()
+            )))
+
+        fp = Line()
+        fp.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                focus.get_center(),
+                p.get_center()
+            ))
+
+        self.play(ShowCreation(mp), ShowCreation(fp))
+        self.play(ShowCreation(m))
+        self.play(ShowCreation(m_label))
+
+        kf = Line()
+        kf.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                k.get_center(),
+                focus.get_center()
+            ))
+        self.play(ShowCreation(kf))
+        self.wait()
+
+        sub1 = CText('在切线上任取一点O')
+        sub1.scale(0.3)
+        sub1.to_edge(RIGHT)
+
+        self.play(Write(sub1))
+        self.wait()
+
+        ot = ValueTracker(0.2)
+        vec_kp = p.get_center() - k.get_center()
+
+        o = Dot()
+        o.plot_depth = 1
+        o.set_fill(RED)
+        o.add_updater(lambda m:\
+            m.move_to(k.get_center() +\
+                vec_kp * ot.get_value()))
+        
+        o_label = TexMobject('O').scale(0.5)
+        o_label.plot_depth = 1
+        o_label.add_updater(lambda m:\
+            m.next_to(o, DR, buff=SMALL_BUFF))
+        
+        self.play(ShowCreation(o))
+        self.play(ShowCreation(o_label))
+        self.wait()
+
+        sub2 = CText('则OM=OF')
+        sub2.scale(0.3)
+        sub2.to_edge(RIGHT)
+
+        self.play(FadeOut(sub1))
+        self.play(Write(sub2))
+        self.wait()
+
+        om = Line()
+        om.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                o.get_center(),
+                m.get_center()
+            ))
+        of = Line()
+        of.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                o.get_center(),
+                focus.get_center()
+            ))
+        
+        self.play(ShowCreation(om), ShowCreation(of))
+        self.wait()
+
+        self.play(ot.set_value, 0.05)
+        self.wait()
+        self.play(ot.set_value, 0.8)
+        self.wait()
+        self.play(ot.set_value, 1.2)
+        self.wait()
+        self.play(ot.set_value, 0.6)
+        self.wait(3)
