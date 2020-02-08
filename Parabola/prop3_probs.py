@@ -1,6 +1,7 @@
 from manimlib.imports import *
 from ManimProjects.utils.Parabola import Parabola
 from ManimProjects.utils.geometry import CText
+from ManimProjects.utils.calculation import get_intersect
 
 class Prob1Open(Scene):
     def construct(self):
@@ -374,3 +375,235 @@ class Prob2(Parabola):
         self.wait()
         self.play(ot.set_value, 0.6)
         self.wait(3)
+
+class Prob3Open(Scene):
+    def construct(self):
+        line1_1 = CText('抛物线')
+        line1_1.set_fill(DARK_BLUE)
+
+        line1_2 = CText('性质三')
+        line1 = VGroup(line1_1, line1_2)
+        line1.arrange(RIGHT)
+        line2 = CText('推论三')
+        lines = VGroup(line1, line2)
+        lines.arrange(DOWN, buff=LARGE_BUFF)
+        self.play(Write(line1))
+        self.wait(3)
+        self.play(Write(line2))
+        self.wait(3)
+        
+        self.play(FadeOut(lines))
+
+class Prob3(Parabola):
+    CONFIG = {
+        'x_min' : -10,
+        'focus' : 2
+    }
+    def construct(self):
+        self.adjust_x_range()
+        graph = self.get_graph(color=LIGHT_BROWN)
+        directrix = self.get_directrix()
+        focus = Dot().move_to(self.get_focus())
+        focus.set_fill(DARK_BROWN)
+        focus.plot_depth = 2
+        focusLabel = TexMobject('F').scale(0.5)
+        focusLabel.next_to(focus, RIGHT, buff=SMALL_BUFF)
+
+        self.play(*[ShowCreation(e) for\
+            e in [graph, directrix, focus, focusLabel]])
+
+        y1_val = ValueTracker(8)
+        
+        p1 = Dot()
+        p1.plot_depth = 1
+        p1.set_fill(DARK_BLUE)
+        p1.add_updater(lambda m:\
+            m.move_to(self.coords_to_point(
+                self.func(y1_val.get_value()),
+                y1_val.get_value()
+            )))
+
+        p1_label = TexMobject('P_1').scale(0.5)
+        p1_label.plot_depth = 1
+        p1_label.add_updater(lambda m:\
+            m.next_to(p1, RIGHT, buff=SMALL_BUFF))
+        
+        tangent1 = Line()
+        self.add_tangent_line_updater(tangent1, p1)
+
+        self.play(ShowCreation(p1))
+        self.play(ShowCreation(p1_label))
+        self.play(ShowCreation(tangent1))
+        # self.play(ShowCreation(k1))
+        # self.play(ShowCreation(k1_label))
+        
+        def get_extent(l, p, t):
+            l.put_start_and_end_on(LEFT * 10,
+                RIGHT * 10)
+            l.set_angle(t.get_angle() + PI)
+            l.move_to(p.get_center())
+        tangent1_extent = Line()
+        tangent1_extent.add_updater(lambda l:\
+            get_extent(l, p1, tangent1))
+
+        self.play(ShowCreation(tangent1_extent))
+        self.wait()
+
+        m1 = Dot()
+        m1.set_fill(DARK_BLUE)
+        m1.plot_depth = 1
+        m1.add_updater(lambda e:\
+            e.move_to(self.coords_to_point(
+                -self.focus,
+                y1_val.get_value()
+            )))
+        
+        m1_label = TexMobject('M_1').scale(0.5)
+        m1_label.add_updater(lambda e:\
+            e.next_to(m1, LEFT, buff=SMALL_BUFF))
+        
+        m1p1 = Line()
+        m1p1.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                p1.get_center(),
+                self.coords_to_point(
+                    -self.focus,
+                    y1_val.get_value()
+            )))
+
+        fp1 = Line()
+        fp1.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                focus.get_center(),
+                p1.get_center()
+            ))
+
+        self.play(ShowCreation(m1p1), ShowCreation(fp1))
+        self.play(ShowCreation(m1))
+        self.play(ShowCreation(m1_label))
+
+        y2_val = ValueTracker(-6)
+        
+        p2 = Dot()
+        p2.plot_depth = 1
+        p2.set_fill(DARK_BLUE)
+        p2.add_updater(lambda m:\
+            m.move_to(self.coords_to_point(
+                self.func(y2_val.get_value()),
+                y2_val.get_value()
+            )))
+
+        p2_label = TexMobject('P_2').scale(0.5)
+        p2_label.plot_depth = 1
+        p2_label.add_updater(lambda m:\
+            m.next_to(p2, RIGHT, buff=SMALL_BUFF))
+        
+        tangent2 = Line()
+        self.add_tangent_line_updater(tangent2, p2)
+
+        self.play(ShowCreation(p2))
+        self.play(ShowCreation(p2_label))
+        self.play(ShowCreation(tangent2))
+        
+        tangent2_extent = Line()
+        tangent2_extent.add_updater(lambda l:\
+            get_extent(l, p2, tangent2))
+
+        self.play(ShowCreation(tangent2_extent))
+        self.wait()
+
+        m2 = Dot()
+        m2.set_fill(DARK_BLUE)
+        m2.plot_depth = 1
+        m2.add_updater(lambda e:\
+            e.move_to(self.coords_to_point(
+                -self.focus,
+                y2_val.get_value()
+            )))
+        
+        m2_label = TexMobject('M_2').scale(0.5)
+        m2_label.add_updater(lambda e:\
+            e.next_to(m2, LEFT, buff=SMALL_BUFF))
+        
+        m2p2 = Line()
+        m2p2.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                p2.get_center(),
+                self.coords_to_point(
+                    -self.focus,
+                    y2_val.get_value()
+            )))
+
+        fp2 = Line()
+        fp2.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                focus.get_center(),
+                p2.get_center()
+            ))
+
+        self.play(ShowCreation(m2p2), ShowCreation(fp2))
+        self.play(ShowCreation(m2))
+        self.play(ShowCreation(m2_label))
+
+        o = Dot()
+        o.plot_depth = 1
+        o.set_fill(DARK_BROWN)
+        o.add_updater(lambda m:\
+            m.move_to(get_intersect(tangent1, tangent2, focus)))
+        
+        self.play(ShowCreation(o))
+
+        o_label = TexMobject('O').scale(0.5)
+        o_label.add_updater(lambda m:\
+            m.next_to(o, LEFT, buff=SMALL_BUFF))
+
+        self.play(ShowCreation(o_label))
+        self.wait(3)
+
+        om1 = Line()
+        om1.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                o.get_center(),
+                m1.get_center()
+            ))
+        
+        om2 = Line()
+        om2.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                o.get_center(),
+                m2.get_center()
+            ))
+        
+        of = Line()
+        of.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                o.get_center(),
+                focus.get_center()
+            ))
+
+        om1.set_color(RED)
+        om2.set_color(RED)
+        of.set_color(RED)
+        
+        self.play(ShowCreation(om1))
+        self.play(ShowCreation(om2))
+        self.play(ShowCreation(of))
+
+        self.wait(3)
+
+        sub = TexMobject("OM_1=OF=OM_2").scale(0.5)
+        sub.to_edge(RIGHT)
+        sub.shift(LEFT * 3)
+        self.play(Write(sub))
+
+        self.wait(3)
+
+        self.play(y1_val.set_value, 2)
+        self.wait(3)
+        self.play(y2_val.set_value, -1)
+        self.wait(3)
+        self.play(
+            ApplyMethod(y1_val.set_value, 6),
+            ApplyMethod(y2_val.set_value, -8)
+        )
+        self.wait(6)
