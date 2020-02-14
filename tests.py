@@ -212,3 +212,47 @@ class DoubleDashedArrow(Scene):
         a.add(tip)
         a.add(tip2)
         self.play(ShowCreation(a))
+
+
+class TangentLine(Scene):
+    def construct(self):
+        ellipse = Ellipse()
+        ellipse.set_width(5)
+        ellipse.set_height(3)
+        
+        dot = Dot()
+        proportion = ValueTracker(0)
+
+        dot.add_updater(lambda m:\
+            m.move_to(
+                ellipse.point_from_proportion(
+                    proportion.get_value()
+                )
+            ))
+
+        tangent_line = Line()
+
+        def move_tangent_line(line):
+            p = proportion.get_value()
+            p1 = ellipse.point_from_proportion(
+                    p)
+            p2 = ellipse.point_from_proportion(
+                    (p + 0.001) % 1)
+            vec = normalize(p2 - p1)
+            line.put_start_and_end_on(
+                p1 + vec * FRAME_X_RADIUS,
+                p1 - vec * FRAME_X_RADIUS
+            )
+        
+        tangent_line.add_updater(lambda l:\
+            move_tangent_line(l))
+        
+        self.add(tangent_line)
+        self.add(ellipse)
+        self.add(dot)
+
+        self.play(proportion.set_value, 1,
+            rate_func = linear,
+            run_time = 5)
+        self.wait()
+
