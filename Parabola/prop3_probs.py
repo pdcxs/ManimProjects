@@ -607,3 +607,359 @@ class Prob3(Parabola):
             ApplyMethod(y2_val.set_value, -8)
         )
         self.wait(6)
+
+class Prob4Open(Scene):
+    def construct(self):
+        line1_1 = CText('抛物线')
+        line1_1.set_fill(DARK_BLUE)
+
+        line1_2 = CText('性质三')
+        line1 = VGroup(line1_1, line1_2)
+        line1.arrange(RIGHT)
+        line2 = CText('推论四')
+        lines = VGroup(line1, line2)
+        lines.arrange(DOWN, buff=LARGE_BUFF)
+        self.play(Write(line1))
+        self.wait(3)
+        self.play(Write(line2))
+        self.wait(3)
+        
+        self.play(FadeOut(lines))
+
+from ManimProjects.utils.rate_functions import *
+
+class Prob4(Parabola):
+    CONFIG = {
+        'x_min' : -10,
+        'focus' : 2
+    }
+    def construct(self):
+        self.adjust_x_range()
+        graph = self.get_graph(color=LIGHT_BROWN)
+        directrix = self.get_directrix()
+        focus = Dot().move_to(self.get_focus())
+        focus.set_fill(DARK_BROWN)
+        focus.plot_depth = 2
+        focusLabel = TexMobject('F').scale(0.5)
+        focusLabel.next_to(focus, RIGHT, buff=SMALL_BUFF)
+
+        self.play(*[ShowCreation(e) for\
+            e in [graph, directrix, focus, focusLabel]])
+        self.wait()
+
+        sub1 = CText('任取一点P').scale(0.3)
+        sub1.to_edge(RIGHT)
+        self.play(ShowCreation(sub1))
+
+        y_val = ValueTracker(6)
+
+        p = Dot()
+        p.plot_depth = 1
+        p.set_fill(DARK_BLUE)
+        p.add_updater(lambda m:\
+            m.move_to(self.coords_to_point(
+                self.func(y_val.get_value()),
+                y_val.get_value()
+            )))
+
+        self.play(ShowCreation(p))
+
+        p_label = TexMobject('P').scale(0.5)
+        p_label.plot_depth = 1
+        p_label.add_updater(lambda m:\
+            m.next_to(p, RIGHT, buff=SMALL_BUFF))
+        self.play(ShowCreation(p_label))
+        self.wait()
+
+        self.play(FadeOut(sub1))
+
+        sub2 = CText('过点P做抛物线的切线')
+        sub2.scale(0.3)
+        sub2.to_edge(RIGHT)
+        self.play(ShowCreation(sub2))
+        self.wait()
+
+        tangent = Line()
+        self.add_tangent_line_updater(tangent, p)
+        # self.play(ShowCreation(tangent))
+        # self.wait()
+
+        tangent_extent = Line()
+        def get_extent(l, p, t):
+            l.put_start_and_end_on(LEFT * 10,
+                RIGHT * 10)
+            l.set_angle(t.get_angle() + PI)
+            l.move_to(p.get_center())
+        tangent_extent.add_updater(lambda l:\
+            get_extent(l, p, tangent))
+        tangent_line = VGroup()
+        tangent_line.add(tangent)
+        tangent_line.add(tangent_extent)
+        self.play(ShowCreation(tangent_extent))
+        self.add(tangent_line)
+        
+        self.wait()
+
+        self.play(FadeOut(sub2))
+        
+        sub3 = CText('交准线于Z').scale(0.3)
+        sub3.to_edge(RIGHT)
+        self.play(ShowCreation(sub3))
+        self.wait()
+
+        z = Dot()
+        z.plot_depth = 1
+        z.set_fill(DARK_BLUE)
+        z.add_updater(lambda m:\
+            m.move_to(self.get_tangent_to_directrix(p)))
+        self.play(ShowCreation(z))
+        
+        z_label = TexMobject('Z').scale(0.5)
+        z_label.plot_depth = 1
+        z_label.add_updater(lambda m:\
+            m.next_to(z, LEFT, buff=SMALL_BUFF))
+        self.play(ShowCreation(z_label))
+        self.wait()
+
+        self.play(FadeOut(sub3))
+        sub4 = CText('交正焦弦于点K').scale(0.3)
+        sub4.to_edge(RIGHT)
+        self.play(ShowCreation(sub4))
+        self.wait()
+
+        def find_k():
+            start = z.get_center()
+            vec = p.get_center() - start
+            vec /= vec[0]
+            d = focus.get_center()[0] - start[0]
+            vec *= d
+            return start + vec
+        
+        k = Dot()
+        k.plot_depth = 1
+        k.set_fill(DARK_BLUE)
+        k.add_updater(lambda m:\
+            m.move_to(find_k()))
+
+        k_label = TexMobject('K').scale(0.5)
+        k_label.plot_depth = 1
+        k_label.add_updater(lambda m:\
+            m.next_to(k, RIGHT, buff=SMALL_BUFF))
+        
+        def find_opp():
+            pos = find_k()
+            fac = -1
+            if pos[1] < 0:
+                fac = 1
+            return self.coords_to_point(
+                self.func(self.focus * 2),
+                fac * self.focus * 2
+            )
+        k_line = Line()
+        k_line.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                find_k(),
+                find_opp()
+            ))
+
+        self.play(ShowCreation(k_line))
+        self.play(ShowCreation(k))
+        self.play(ShowCreation(k_label))
+
+        self.wait()
+
+        self.play(FadeOut(sub4))
+        sub5 = CText('则ZF=KF').scale(0.3)
+        sub5.to_edge(RIGHT)
+        self.play(ShowCreation(sub5))
+        self.wait()
+
+        zf = Line()
+        zf.set_color(RED)
+        zf.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                z.get_center(),
+                focus.get_center()
+            ))
+        kf = Line()
+        kf.set_color(RED)
+        kf.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                k.get_center(),
+                focus.get_center()
+            ))
+        self.play(
+            ShowCreation(zf),
+            ShowCreation(kf))
+        self.wait()
+
+        self.play(y_val.set_value, 9,
+            rate_func=easeOutElastic,
+            run_time=2)
+        self.wait()
+
+        self.play(y_val.set_value, 1,
+            rate_func=easeOutBounce,
+            run_time=2)
+        self.wait()
+
+        self.play(y_val.set_value, -6,
+            rate_func=easeOutElastic,
+            run_time=2)
+        self.wait()
+
+        self.play(y_val.set_value, 8,
+            rate_func=easeOutBounce,
+            run_time=2)
+        self.wait()
+
+        self.play(FadeOut(sub5))
+
+        m = Dot()
+        m.plot_depth = 1
+        m.set_fill(YELLOW)
+        m.add_updater(lambda e:\
+            e.move_to(z.get_center()[0] * RIGHT +
+                p.get_center()[1] * UP))
+
+        m_label = TexMobject('M').scale(0.5)
+        m_label.add_updater(lambda e:\
+            e.next_to(m, LEFT, buff=SMALL_BUFF))
+        
+        self.play(ShowCreation(m))
+        self.play(ShowCreation(m_label))
+
+        mp = DashedLine()
+        mp.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                m.get_center(),
+                p.get_center()
+            ))
+        self.play(ShowCreation(mp))
+
+        fp = DashedLine()
+        fp.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                focus.get_center(),
+                p.get_center()
+            ))
+        self.play(ShowCreation(fp))
+        self.wait()
+
+        km = DashedLine()
+        km.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                k.get_center(),
+                m.get_center()
+            ))
+        self.play(ShowCreation(km))
+
+        k2 = Dot()
+        k2.plot_depth = 1
+        k2.set_fill(YELLOW)
+        k2.add_updater(lambda m:\
+            m.move_to(
+                k.get_center()[1] * UP +
+                z.get_center()[0] * RIGHT
+            ))
+        self.play(ShowCreation(k2))
+
+        k2_label = TexMobject('K\'').scale(0.5)
+        k2_label.add_updater(lambda m:\
+            m.next_to(k2, LEFT, buff=SMALL_BUFF))
+        self.play(ShowCreation(k2_label))
+
+        kk2 = DashedLine()
+        kk2.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                k.get_center(),
+                k2.get_center()
+            ))
+        self.play(ShowCreation(kk2))
+
+        z2 = Dot()
+        z2.plot_depth = 1
+        z2.set_fill(YELLOW)
+        z2.add_updater(lambda m:\
+            m.move_to(
+                z.get_center()[1] * UP +
+                focus.get_center()[0] * RIGHT
+            ))
+        self.play(ShowCreation(z2))
+
+        z2f = Line()
+        z2f.plot_depth = -1
+        z2f.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                z2.get_center(),
+                focus.get_center()
+            ))
+        self.add(z2f)
+
+        z2_label = TexMobject('Z\'').scale(0.5)
+        z2_label.add_updater(lambda m:\
+            m.next_to(z2, UR, buff=SMALL_BUFF))
+        self.play(ShowCreation(z2_label))
+
+        zz2 = DashedLine()
+        zz2.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                z.get_center(),
+                z2.get_center()
+            ))
+        self.play(ShowCreation(zz2))
+        self.wait()
+
+        self.play(
+            kk2.set_color, RED
+        )
+        self.play(
+            zz2.set_color, RED
+        )
+
+        proof = VGroup()
+        proof1 = CText('证明思路').scale(0.3)
+        proof2 = TexMobject('KK\'=ZZ\'').scale(0.5)
+        proof3 = TexMobject('\\triangle ZKM \\cong \\triangle ZKF')
+        proof3.scale(0.5)
+        proof.add(proof1)
+        proof.add(proof2)
+        proof.add(proof3)
+        proof.arrange(DOWN)
+        proof.to_edge(RIGHT, buff=LARGE_BUFF)
+        proof2.align_to(proof1, LEFT)
+        proof3.align_to(proof2, LEFT)
+        self.play(ShowCreation(proof))
+        self.wait(5)
+
+        zkm = Polygon(
+            z.get_center(),
+            k.get_center(),
+            m.get_center()
+        )
+        zkm.set_fill(DARK_BLUE, opacity=0.5)
+
+        zkf = Polygon(
+            z.get_center(),
+            k.get_center(),
+            focus.get_center()
+        )
+        zkf.set_fill(DARK_BLUE, opacity=0.5)
+
+        self.play(
+            ShowCreationThenDestruction(zkm),
+            ShowCreationThenDestruction(zkf)
+        )
+        self.wait(15)
+
+        self.play(y_val.set_value, 1,
+            rate_func=easeOutBounce)
+        self.wait(5)
+
+        self.play(y_val.set_value, -1,
+            rate_func=easeOutElastic)
+        self.wait(5)
+
+        self.play(y_val.set_value, -8,
+            rate_func=easeOutBounce)
+        self.wait(5)
