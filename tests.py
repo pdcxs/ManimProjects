@@ -255,6 +255,8 @@ class TangentLine(Scene):
             rate_func = linear,
             run_time = 5)
         self.wait()
+        
+from ManimProjects.utils.rate_functions import *
 
 class EaseTest(Scene):
     def construct(self):
