@@ -24,7 +24,9 @@ Stay in the manimlib directory, deploy the build tools with:
 
 ### Step4
 
-Build projects with: `python build.py [options]`
+If you use vscode and install python with anaconda or miniconda (env name is manim, if not, please change the line 6 of file `build.ps1`), you can just open the manim folder with vscode, then open your file, put the cursor in the class that you want to build (any line), press `Ctrl-Shift-B`, and select the build solution to build your scene.
+
+Otherwise, build projects with: `python build.py [options]`
 
 For example: `python build.py -pl`
 
