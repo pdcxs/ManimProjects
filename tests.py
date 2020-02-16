@@ -256,3 +256,34 @@ class TangentLine(Scene):
             run_time = 5)
         self.wait()
 
+class EaseTest(Scene):
+    def construct(self):
+        path = Line(LEFT * 3, RIGHT * 3)
+        dot = Dot(path.get_start())
+
+        self.add(path)
+        self.add(dot)
+
+        self.play(
+            MoveAlongPath(dot, path),
+            rate_func=easeOutBounce,
+            run_time=2
+        )
+        self.wait()
+
+        # Because easeOutElastic function will return
+        # value greater than 1
+        # There has some requirements:
+        # 1. Cannot use MoveAlongPath, because points_from_proportion
+        #    will crash.
+        # 2. Need to remove all the np.clip functions in
+        #    manimlib/animation/animation.py, i.e. change
+        #    the code of get_sub_alpha and interpolate methods
+        #    from `return np.clip((value - lower), 0, 1)`
+        #    to `value - lower`
+        #    and remove `alpha = np.clip(alpha, 0, 1)`, respectively.`
+
+        self.play(dot.move_to, path.get_start(),
+            rate_func=easeOutElastic)
+        self.wait()
+        
