@@ -79,7 +79,7 @@ class Prop3(Parabola):
         p1p2.add_updater(lambda m:\
             m.put_start_and_end_on(
                 p1.get_center(),
-                p2.get_center()
+                self.get_opposite(p1)
             ))
         
         self.play(ShowCreation(p1p2))
@@ -174,16 +174,20 @@ class Prop3(Parabola):
             m.next_to(m1, LEFT, buff=SMALL_BUFF))
 
         p1m1 = Line()
-        p1m1.add_updater(lambda m:\
-            m.put_start_and_end_on(
-                m1.get_center(),
-                p1.get_center()
-            ))
+        p1m1.put_start_and_end_on(
+            m1.get_center(),
+            p1.get_center())
         
         self.play(ShowCreation(p1m1))
         self.play(ShowCreation(m1))
         self.play(ShowCreation(m1_label))
         self.wait()
+
+        p1m1.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                m1.get_center(),
+                p1.get_center()
+            ))
 
         zf = Line()
         zf.add_updater(lambda m:\
@@ -206,16 +210,20 @@ class Prop3(Parabola):
             m.next_to(m2, LEFT, buff=SMALL_BUFF))
 
         p2m2 = Line()
-        p2m2.add_updater(lambda m:\
-            m.put_start_and_end_on(
-                m2.get_center(),
-                p2.get_center()
-            ))
+        p2m2.put_start_and_end_on(
+            m2.get_center(),
+            p2.get_center())
         
         self.play(ShowCreation(p2m2))
         self.play(ShowCreation(m2))
         self.play(ShowCreation(m2_label))
         self.wait()
+
+        p2m2.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                m2.get_center(),
+                p2.get_center()
+            ))
 
         angle1 = Angle(
             p1, z, m1,
@@ -275,7 +283,7 @@ class Prop3(Parabola):
         proof2 = TexMobject('ZF \\perp P_1P_2')
         proof2.scale(0.65)
 
-        proof3 = CText('显然Z也是P2与准线的焦点')
+        proof3 = CText('显然Z也是P2与准线的交点')
         proof3.scale(0.3)
 
         proof4 = TexMobject('\\angle 1 = \\angle2, \\angle 3 = \\angle 4')
@@ -333,4 +341,3 @@ class Prop3(Parabola):
 
         self.play(y_val.set_value, 7)
         self.wait(15)
-        
