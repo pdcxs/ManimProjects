@@ -24,7 +24,7 @@ class OpenScene(Scene):
 
         self.play(FadeOut(lines))
 
-class Prop3(Parabola):
+class Prop4(Parabola):
     CONFIG = {
         'focus': 3,
         'x_min': -10
