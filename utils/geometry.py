@@ -30,7 +30,7 @@ class Angle(Arc):
         return pos2 + normalize(vec) * self.radius
     
     def get_end(self):
-        pos1 = self.p3.get_center()
+        pos3 = self.p3.get_center()
         pos2 = self.p2.get_center()
         vec = pos3 - pos2
         return pos2 + normalize(vec) * self.radius
@@ -82,16 +82,31 @@ class Angle(Arc):
 
     def generate_points(self):
         o = self.p2.get_center()
-        arc = Arc(
-            radius = self.radius,
-            start_angle = self.get_start_angle(),
-            angle = self.get_angle(),
-            arc_center = o
-        )
-        self.clear_points()
-        self.append_points(arc.points)
-        if (self.show_edge):
-            self.add_line_to(o)
-            self.append_points([o])
-            self.add_line_to(arc.points[0])
+        if abs(self.get_angle() - PI/2) < 1e-6:
+            self.clear_points()
+            vec = self.get_end() - o
+            if self.show_edge:
+                self.append_points([o])
+                self.add_line_to(self.get_start())
+            self.append_points([self.get_start()])
+            self.add_line_to(self.get_start() + vec)
+            self.append_points([self.get_start() + vec])
+            self.add_line_to(self.get_end())
+            self.append_points([self.get_end()])
+            if self.show_edge:
+                self.add_line_to(o)
+                self.append_points([o])
+        else:
+            arc = Arc(
+                radius = self.radius,
+                start_angle = self.get_start_angle(),
+                angle = self.get_angle(),
+                arc_center = o
+            )
+            self.clear_points()
+            self.append_points(arc.points)
+            if (self.show_edge):
+                self.add_line_to(o)
+                self.append_points([o])
+                self.add_line_to(arc.points[0])
         
