@@ -104,4 +104,29 @@ class Angle(Arc):
                 self.add_line_to(o)
                 self.append_points([o])
                 self.add_line_to(arc.points[0])
+
+
+class Label(Mobject):
+    CONFIG = {
+        "buff": SMALL_BUFF,
+        "direction": RIGHT,
+    }
+
+    def __init__(self, label, target, **kwargs):
+        self.label = label
+        self.target = target
+        Mobject.__init__(self, **kwargs)
+        self.to_target()
+        self.add(label)
         
+    def to_target(self):
+        self.label.next_to(self.target,
+            self.direction,
+            buff=self.buff)
+    
+    def make_dynamic(self):
+        self.label.add_updater(lambda m:\
+            m.next_to(self.target,
+            self.direction,
+            buff=self.buff))
+
