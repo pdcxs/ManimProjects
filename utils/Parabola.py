@@ -116,3 +116,22 @@ class Parabola(Scene):
                 point.get_center(),
                 self.get_tangent_to_directrix(point)
             ))
+
+    def add_tangent_extent_updater(self, line, point):
+        def updater(l):
+            l.put_start_and_end_on(LEFT * FRAME_WIDTH, RIGHT * FRAME_WIDTH)
+            pos1 = point.get_center()
+            pos2 = self.get_tangent_to_directrix(point)
+            vec = pos2 - pos1
+            ang = math.atan2(vec[1], vec[0])
+            l.set_angle(ang)
+            l.move_to(pos1)
+        line.add_updater(lambda l:\
+            updater(l))
+
+    def add_directrix_point_updater(self, p, d):
+        d.add_updater(lambda m:\
+            m.move_to(self.coords_to_point(
+                -self.focus, 0
+            ) + p.get_center()[1] * UP))
+        
