@@ -12,12 +12,11 @@ class Angle(Arc):
         "color": WHITE,
         "show_edge": False,
     }
-    def __init__(self, p1, p2, p3, inner=True, **kwargs):
+    def __init__(self, p1, p2, p3, **kwargs):
         self.p1 = p1
         self.p2 = p2
         self.p3 = p3
         self.arc_center = p2.get_center()
-        self.inner = inner
         Arc.__init__(self,
             start_angle=self.get_start_angle(),
             angle = self.get_angle(),
@@ -56,10 +55,6 @@ class Angle(Arc):
         
         if angle < 0:
             angle += TAU
-        
-        if (self.inner and angle > PI) or\
-            (not self.inner and angle < PI):
-            angle = TAU - angle
         
         return angle
 
