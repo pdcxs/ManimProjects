@@ -213,7 +213,6 @@ class DoubleDashedArrow(Scene):
         a.add(tip2)
         self.play(ShowCreation(a))
 
-
 class TangentLine(Scene):
     def construct(self):
         ellipse = Ellipse()
@@ -255,7 +254,7 @@ class TangentLine(Scene):
             rate_func = linear,
             run_time = 5)
         self.wait()
-        
+
 from ManimProjects.utils.rate_functions import *
 
 class EaseTest(Scene):
@@ -288,4 +287,47 @@ class EaseTest(Scene):
         self.play(dot.move_to, path.get_start(),
             rate_func=easeOutElastic)
         self.wait()
+
+from ManimProjects.utils.geometry import *
+
+class AngleTest(Scene):
+    def construct(self):
+        radius = 3
+        ang = ValueTracker(0.1)
+        p1 = Dot(RIGHT * radius)
+        o = Dot()
+        p2 = Dot()
+        p2.add_updater(lambda m: m.move_to(
+            math.cos(ang.get_value()) * radius * RIGHT +
+            math.sin(ang.get_value()) * radius * UP))
         
+        op1 = Line()
+        op2 = Line()
+        op1.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                o.get_center(),
+                p1.get_center()
+            ))
+        op2.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                o.get_center(),
+                p2.get_center()
+            ))
+        self.add(op1, op2, p1, o, p2)
+
+        angle = Angle(p1, o, p2,
+            show_edge=True,
+        )
+        angle.make_angle_dynamic()
+        label = TexMobject('\\alpha').scale(0.65)
+        angle.add_label(label)
+        angle.set_fill(DARK_BLUE, opacity=0.8)
+        self.add(label, angle)
+
+        self.play(ang.set_value, 2*PI-0.1,
+            run_time=5,
+            rate_func=linear)
+        self.wait()
+
+        self.play(ang.set_value, PI/2,)
+        self.wait(3)
