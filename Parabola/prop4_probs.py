@@ -255,3 +255,286 @@ class Prob1(Parabola):
         )
         self.wait(5)
         
+class Prob2Open(Scene):
+    def construct(self):
+        line1_1 = CText('抛物线')
+        line1_1.set_fill(DARK_BLUE)
+
+        line1_2 = CText('性质四')
+        line1 = VGroup(line1_1, line1_2)
+        line1.arrange(RIGHT)
+        line2 = CText('推论二')
+        lines = VGroup(line1, line2)
+        lines.arrange(DOWN, buff=LARGE_BUFF)
+        self.play(Write(line1))
+        self.wait(3)
+        self.play(Write(line2))
+        self.wait(3)
+        
+        self.play(FadeOut(lines))
+
+class Prob2(Parabola):
+    CONFIG = {
+        "x_min": -8,
+        "focus": 2
+    }
+    def construct(self):
+        self.adjust_x_range()
+        graph = self.get_graph(color=DARK_BROWN)
+        f = Dot()
+        f.move_to(self.get_focus())
+        f.plot_depth = 1
+        f.set_color(DARK_BROWN)
+        f_label = Label(
+            TexMobject('F').scale(TEX_SIZE),
+            f)
+        f_label.next_to(f, DOWN, buff=SMALL_BUFF)
+        f_label.plot_depth = 1
+        directrix = self.get_directrix()
+
+        self.play(
+            *[ShowCreation(e) for e in\
+                [f, f_label, graph, directrix]]
+        )
+        self.wait()
+
+        y_val = ValueTracker(8)
+
+        sub1 = CText('作焦点弦PQ')
+        sub1.scale(TEXT_SIZE)
+        sub1.to_edge(RIGHT)
+        self.play(Write(sub1))
+
+        p = Dot()
+        p.set_color(DARK_BLUE)
+        p.plot_depth = 1
+        p.add_updater(lambda m:\
+            m.move_to(self.value_to_point(
+                y_val.get_value())))
+        
+        p_label = Label(TexMobject('P').scale(TEX_SIZE), p, direction=UL)
+        p_label.plot_depth = 1
+
+        self.play(ShowCreation(p), ShowCreation(p_label))
+
+        p_label.make_dynamic()
+
+        q = Dot()
+        q.set_color(DARK_BLUE)
+        q.plot_depth = 1
+        q.add_updater(lambda m:\
+            m.move_to(self.get_opposite(p)))
+        
+        q_label = Label(TexMobject('Q').scale(TEX_SIZE), q, direction=RIGHT)
+        q_label.plot_depth = 1
+
+        pq = Line()
+        pq.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                p.get_center(),
+                self.get_opposite(p)
+            ))
+        self.play(ShowCreation(pq))
+        self.play(ShowCreation(q), ShowCreation(q_label))
+        q_label.make_dynamic()
+        self.wait()
+
+        sub2 = CText('过P、Q作抛物线切线')
+        sub2.scale(TEXT_SIZE)
+        sub2.to_edge(RIGHT)
+        self.play(FadeOut(sub1))
+        self.play(Write(sub2))
+
+        tangent_p = Line()
+        self.add_tangent_extent_updater(tangent_p, p)
+
+        tangent_q = Line()
+        self.add_tangent_extent_updater(tangent_q, q)
+
+        self.play(ShowCreation(tangent_p))
+        self.play(ShowCreation(tangent_q))
+
+        self.wait()
+
+        n = Dot()
+        n.set_color(DARK_BLUE)
+        n.plot_depth = 1
+        n.add_updater(lambda m:\
+            m.move_to(self.get_tangent_to_directrix(p)))
+        
+        n_label = Label(TexMobject('N').scale(TEX_SIZE), n, direction=LEFT)
+        n_label.plot_depth = 1
+        
+        self.play(ShowCreation(n))
+        self.play(ShowCreation(n_label))
+        self.wait()
+
+        n_label.make_dynamic()
+
+        sub3 = CText('过Q点作切线的垂线，即法线')
+        sub3.scale(TEXT_SIZE)
+        sub3.to_edge(RIGHT)
+
+        self.play(FadeOut(sub2))
+        self.play(Write(sub3))
+        self.wait()
+
+        normal_q = Line()
+        self.add_normal_updater(normal_q, q)
+
+        self.play(ShowCreation(normal_q))
+        self.wait()
+
+        sub4 = CText('过Q点的法线交轴于点G')
+        sub4.scale(TEXT_SIZE)
+        sub4.to_edge(RIGHT)
+        
+        self.play(FadeOut(sub3))
+        self.play(Write(sub4))
+        self.wait()
+
+        h_line = Line(LEFT * FRAME_X_RADIUS, RIGHT)
+        h_line.plot_depth = -1
+        self.play(ShowCreation(h_line))
+        self.wait()
+
+        def normal_to_horizontal(point):
+            [x, y] = self.point_to_coords(point)
+            if y == 0:
+                return self.value_to_point(0)
+            d = -y / (2 * self.focus)
+            dx = y / d
+            return self.coords_to_point(
+                x - dx, 0
+            )
+        
+        g = Dot()
+        g.set_color(DARK_BLUE)
+        g.plot_depth = 1
+        g.add_updater(lambda m:\
+            m.move_to(normal_to_horizontal(q)))
+
+        g_label = Label(TexMobject('G').scale(TEX_SIZE), g, direction=UL)
+        
+        self.play(ShowCreation(g))
+        self.play(ShowCreation(g_label))
+        self.wait()
+
+        g_label.make_dynamic()
+
+        gqn = Angle(g, q, n, radius=0.2)
+        gqn.make_angle_dynamic()
+        self.play(ShowCreation(gqn))
+
+        sub5 = CText('GZ垂直于PN于Z')
+        sub5.scale(TEXT_SIZE)
+        sub5.to_edge(RIGHT)
+        self.play(FadeOut(sub4))
+        self.play(Write(sub5))
+        self.wait()
+
+        def get_z():
+            p1 = n.get_center()
+            p2 = g.get_center()
+            p3 = q.get_center()
+            vec = p2 - p3
+            return p1 + vec
+        
+        gz = Line()
+        gz.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                g.get_center(),
+                get_z()
+            ))
+        self.play(ShowCreation(gz))
+
+        z = Dot()
+        z.set_color(DARK_BLUE)
+        z.plot_depth = 1
+        z.add_updater(lambda m:\
+            m.move_to(get_z()))
+        
+        z_label = Label(TexMobject('Z').scale(TEX_SIZE), z, direction=UP)
+        z_label.plot_depth = 1
+
+        self.play(ShowCreation(z))
+        self.play(ShowCreation(z_label))
+        self.wait()
+
+        z_label.make_dynamic()
+
+        nzg = Angle(n, z, g, radius=0.2)
+        nzg.make_angle_dynamic()
+
+        self.play(ShowCreation(nzg))
+        self.wait()
+
+        sub6 = CText('则ZF垂直于FG')
+        sub6.scale(TEXT_SIZE)
+        sub6.to_edge(RIGHT)
+
+        self.play(FadeOut(sub5))
+        self.play(Write(sub6))
+        self.wait()
+
+        zf = Line()
+        zf.add_updater(lambda m:\
+            m.put_start_and_end_on(
+                z.get_center(),
+                f.get_center()
+            ))
+        gfz = Angle(g, f, z, radius=0.2)
+
+        self.play(ShowCreation(zf))
+        self.play(ShowCreation(gfz))
+        self.wait(5)
+
+        self.play(y_val.set_value, 3)
+        self.wait(5)
+        
+        m = Dot()
+        m.set_color(DARK_BLUE)
+        m.plot_depth = 1
+        self.add_directrix_point_updater(q, m)
+
+        m_label = Label(TexMobject('M').scale(TEX_SIZE), m, direction=LEFT)
+        m_label.plot_depth = 1
+
+        mq = Line()
+        mq.add_updater(lambda l:\
+            l.put_start_and_end_on(
+                m.get_center(),
+                q.get_center()
+            ))
+        
+        self.play(
+            ShowCreation(m),
+            ShowCreation(m_label)
+        )
+        self.play(ShowCreation(mq))
+
+        self.wait()
+        m_label.make_dynamic()
+
+        proof1 = CText('证明思路：')
+        proof1.scale(TEXT_SIZE)
+
+        proof2 = TexMobject('\\triangle NMQ \\cong \\triangle ZFG')
+        proof2.scale(TEX_SIZE)
+
+        proof = VGroup(proof1, proof2)
+        proof.arrange(DOWN)
+        proof1.align_to(proof2, LEFT)
+
+        proof.to_edge(RIGHT)
+
+        self.play(FadeOut(sub6))
+        self.play(Write(proof))
+        self.wait(15)
+
+        self.play(y_val.set_value, 9)
+        self.wait(5)
+
+        self.play(y_val.set_value, 6)
+        self.wait(15)
+
