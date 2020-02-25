@@ -135,3 +135,26 @@ class Parabola(Scene):
                 -self.focus, 0
             ) + p.get_center()[1] * UP))
         
+    def get_normal_to_directrix(self, point):
+        [x, y] = self.point_to_coords(point)
+        if y == 0:
+            return self.coords_to_point(-self.focus, 0)
+        d = -y / (2 * self.focus)
+        dx = -self.focus - x
+        dy = dx * d
+        return self.coords_to_point(
+            -self.focus,
+            y + dy
+        )
+
+    def add_normal_updater(self, line, point):
+        def updater(l):
+            l.put_start_and_end_on(LEFT * FRAME_WIDTH, RIGHT * FRAME_WIDTH)
+            pos1 = point.get_center()
+            pos2 = self.get_normal_to_directrix(point)
+            vec = pos2 - pos1
+            ang = math.atan2(vec[1], vec[0])
+            l.set_angle(ang)
+            l.move_to(pos1)
+        line.add_updater(lambda l:\
+            updater(l))
