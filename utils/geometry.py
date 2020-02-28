@@ -11,6 +11,8 @@ class Angle(Arc):
         "radius": 0.5,
         "color": WHITE,
         "show_edge": False,
+        "is_right": False,
+        "not_right": False,
     }
     def __init__(self, p1, p2, p3, **kwargs):
         self.p1 = p1
@@ -77,7 +79,9 @@ class Angle(Arc):
 
     def generate_points(self):
         o = self.p2.get_center()
-        if abs(self.get_angle() - PI/2) < 1e-6:
+        if self.is_right or\
+        (not self.not_right and\
+            abs(self.get_angle() - PI/2) < 1e-6):
             self.clear_points()
             vec = self.get_end() - o
             if self.show_edge:
