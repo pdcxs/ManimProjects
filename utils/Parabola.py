@@ -2,9 +2,9 @@ from manimlib.imports import *
 
 class Parabola(Scene):
     CONFIG = {
-        'focus': 1,
+        'focus': 2,
         'y_max': 10,
-        'x_min': -2,
+        'x_min': -8,
         'color': WHITE
     }
 
