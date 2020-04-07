@@ -70,6 +70,8 @@ class LSystem(Scene):
             print(f'iteration {i+1} is finished')
     
     def draw(self):
+        count = self.expression.count("F")
+        print(f'Total {count} Fs')
         for e in self.expression:
             act = self.actions.get(e, None)
             if act is not None:
@@ -116,7 +118,7 @@ class Tree(LSystem):
             'F': 'FF'
         },
         'initial': 'X',
-        'length': 0.1,
+        'length': 0.05,
         'step_time': 0.1,
         'start_rot': 75 * DEGREES
     }
@@ -126,4 +128,3 @@ class Tree(LSystem):
         # self.animation = lambda x: self.add(x)
         self.draw()
         self.wait()
-
