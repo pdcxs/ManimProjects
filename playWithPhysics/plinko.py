@@ -44,11 +44,11 @@ class Plinko(PhysicScene):
                 plk_mobj.move_to(pos)
 
                 plk_body = pymunk.Body(body_type=pymunk.Body.STATIC)
-                plk_body.position = pos[0] * 1000, pos[1] * 1000
+                plk_body.position = pos[0], pos[1]
 
                 plk_shape = pymunk.Circle(
                     plk_body,
-                    plk_mobj.radius * 1000)
+                    plk_mobj.radius)
                 plk_shape.elasticity = 0
                 plk_shape.friction = 0
                 self.space.add(plk_shape, plk_body)
@@ -62,8 +62,8 @@ class Plinko(PhysicScene):
             pos_e = seg.points[-1]
             seg = pymunk.Segment(
                 stc_body,
-                (pos_s[0] * 1000, pos_s[1] * 1000),
-                (pos_e[0] * 1000, pos_e[1] * 1000),
+                (pos_s[0], pos_s[1]),
+                (pos_e[0], pos_e[1]),
                 0
             )
             seg.friction = 0
@@ -72,13 +72,13 @@ class Plinko(PhysicScene):
 
         for i in range(80):
             mass = 10
-            radius = 90
+            radius = 0.09
             moment = pymunk.moment_for_circle(mass, 0, radius)
             ball_body = pymunk.Body(mass, moment)
-            ball_body.position = (2*random() - 1) + start_x, 4000
+            ball_body.position = (2*random() - 1) + start_x, 4
             ball_shape = pymunk.Circle(ball_body, radius)
             ball_shape.elasticity = 0
-            ball_mobj = Circle(radius = radius / 1000)
+            ball_mobj = Circle(radius = radius)
             ball_mobj.set_fill(DARK_BLUE, opacity=1)
             ball = PhysicMobject(
                 ball_body, ball_shape, ball_mobj)
