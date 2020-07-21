@@ -1,5 +1,5 @@
 # to run this code, you need to use the brach:
-# https://github.com/pdcxs/manim/tree/physics
+# https://github.com/pdcxs/manim/tree/physic
 from manimlib.imports import *
 
 class FuncSurface(PhysicScene):
@@ -20,10 +20,10 @@ class FuncSurface(PhysicScene):
 
         pnts = grd_shape.points
         for i in range(len(pnts) - 1):
-            x1 = pnts[i][0] * 1000
-            y1 = pnts[i][1] * 1000
-            x2 = pnts[i + 1][0] * 1000
-            y2 = pnts[i + 1][1] * 1000
+            x1 = pnts[i][0]
+            y1 = pnts[i][1]
+            x2 = pnts[i + 1][0]
+            y2 = pnts[i + 1][1]
             grd_seg = pymunk.Segment(grd_body,
                 (x1, y1),
                 (x2, y2), 0)
@@ -33,9 +33,9 @@ class FuncSurface(PhysicScene):
 
         for i in range(30):
             mass = 10
-            pos = (i * 300 - 5000), 4000
+            pos = (i * 0.3 - 5), 4
             if i % 2 == 0:
-                size=(500, 500)
+                size=(0.5, 0.5)
                 moment = pymunk.moment_for_box(mass, size)
                 body = pymunk.Body(mass, moment)
                 body.angle = i * 0.1
@@ -53,10 +53,10 @@ class FuncSurface(PhysicScene):
                 mobj.set_fill(DARK_BROWN, opacity=1)
 
                 moment = pymunk.moment_for_circle(
-                    mass, 0, radius * 1000)
+                    mass, 0, radius)
                 body = pymunk.Body(mass, moment)
                 body.position = pos
-                shape = pymunk.Circle(body, radius * 1099)
+                shape = pymunk.Circle(body, radius)
                 shape.elasticity = 0.8
 
             pmobj = PhysicMobject(body, shape, mobj)
