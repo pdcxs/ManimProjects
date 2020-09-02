@@ -48,6 +48,10 @@ class VideoMobject(Mobject):
         self.is_start = False
         self.offset = self.current_time
 
+    def restart(self):
+        self.is_start = True
+        self.offset = 0
+
     def update_pixel(self):
         if not self.is_start:
             return
