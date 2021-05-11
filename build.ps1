@@ -30,4 +30,4 @@ $code = $code.SubString(0, $classEnd)
 
 Write-Output "You select class $code"
 
-python -m manim $file $code $option
+manimgl $file $code $option
